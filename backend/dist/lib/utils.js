@@ -12,6 +12,7 @@ import mongoose from "mongoose";
 import multer from "multer";
 import path from "path";
 export function getBlockValueFromParameter(parameter, block) {
+    var _a;
     switch (parameter) {
         case "uid":
             return block.data.autodata.uid;
@@ -19,8 +20,18 @@ export function getBlockValueFromParameter(parameter, block) {
             return block.data.autodata.timestamp.toString();
         case "prevHash":
             return block.data.constructordata.prevHash;
-        case "file":
-            return block.data.constructordata.file.name;
+        case "med.patient.id":
+            return block.data.constructordata.medicalRecord.patient.id;
+        case "med.patient.name":
+            return block.data.constructordata.medicalRecord.patient.name;
+        case "med.patient.age":
+            return block.data.constructordata.medicalRecord.patient.age.toString();
+        case "med.doctor.name":
+            return block.data.constructordata.medicalRecord.doctor.name;
+        case "med.hospital.name":
+            return block.data.constructordata.medicalRecord.hospital.name;
+        case "med.hospital.id":
+            return block.data.constructordata.medicalRecord.hospital.id;
         case "pk":
             return block.data.constructordata.pk;
         case "nextPk":
@@ -31,10 +42,8 @@ export function getBlockValueFromParameter(parameter, block) {
             return block.signature;
         case "hash":
             return block.hash;
-        case "parentUid":
-            return block.data.constructordata.parentUid;
-        case "version":
-            return block.data.constructordata.version.toString();
+        case "accessTo":
+            return (_a = block.data.constructordata.medicalRecord.accessTo.hospitalId) !== null && _a !== void 0 ? _a : "null";
     }
 }
 export const environ = process.env;

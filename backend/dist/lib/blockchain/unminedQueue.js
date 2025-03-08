@@ -10,15 +10,6 @@ export class UnminedQueue {
     }
     addToQueue(block, userPublicKey) {
         var _a;
-        if (block.data.constructordata.parentUid) {
-            const parentBlock = chain.search("uid", block.data.constructordata.parentUid)[0] ||
-                this.search("uid", block.data.constructordata.parentUid)[0];
-            if (!parentBlock)
-                return "parentBlockNotFound";
-            if (!userPublicKey ||
-                !KeyManager.verifySignature(block.data.constructordata.file.userSignedHash, userPublicKey, parentBlock.data.constructordata.file.hash))
-                return "unauthorizedParentBlock";
-        }
         if (this.queue.length === 0) {
             block.data.constructordata.prevHash = ((_a = chain.getLastBlock()) === null || _a === void 0 ? void 0 : _a.hash) || "";
         }

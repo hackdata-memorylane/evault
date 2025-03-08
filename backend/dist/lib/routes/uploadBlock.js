@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { sha256 } from "../utils.js";
 import userModel from "../../schema/userModel.js";
-import { createSign } from "crypto";
 import { v4 } from "uuid";
 import unminedQueue from "../blockchain/unminedQueue.js";
 import Block from "../blockchain/block.js";
@@ -17,27 +16,19 @@ import unminedQueueModel from "../../schema/unminedQueueModel.js";
 export default function uploadBlock(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { details, parentRecordId, version, userId } = req.body;
+            const medRecord = req.body;
             const file = req.file;
             if (!file) {
                 res.status(400).json({ err: "No file uploaded" });
                 return;
             }
-            const user = yield userModel.findOne({ uid: userId });
-            if (!user) {
-                res.status(400).json({ err: "User not found" });
+            const patient = yield userModel.findOne({ uid: medRecord.patient.id });
+            if (!patient) {
+                res.status(400).json({ err: "Patient not found" });
                 return;
             }
             const fileHash = sha256(file.filename);
-            const signer = createSign("rsa-sha256");
-            signer.update(fileHash);
-            const fileDetails = {
-                name: file.filename,
-                size: file.size,
-                description: details,
-                hash: sha256(file.filename),
-                userSignedHash: signer.sign(user.keypair.privateKey, "hex"),
-            };
+            const medRecordHashed = Object.assign(Object.assign({}, medRecord), { record: Object.assign(Object.assign({}, medRecord.record), { hash: fileHash }) });
             const blockPartial = {
                 data: {
                     autodata: {
@@ -46,11 +37,9 @@ export default function uploadBlock(req, res) {
                     },
                     constructordata: {
                         prevHash: "",
-                        parentUid: parentRecordId,
-                        file: fileDetails,
+                        medicalRecord: medRecordHashed,
                         pk: "",
                         nextPk: "",
-                        version: version,
                     },
                     nonce: 0,
                 },

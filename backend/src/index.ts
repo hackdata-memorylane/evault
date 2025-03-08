@@ -13,6 +13,8 @@ import chain from "./lib/blockchain/chain.js";
 import mineBlock from "./lib/routes/mineBlock.js";
 import unminedQueueModel from "./schema/unminedQueueModel.js";
 import unminedQueue from "./lib/blockchain/unminedQueue.js";
+import hospitalModel from "./schema/hospitalModel.js";
+import { v4 } from "uuid";
 
 dotenv.config();
 
@@ -47,7 +49,6 @@ async function fillUnminedQueue() {
 
 
 async function run() {
-    console.log(getEl("keys", "keypairs"));
     await connectDb();
     fillChain();
     fillUnminedQueue();

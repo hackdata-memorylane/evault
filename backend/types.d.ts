@@ -12,11 +12,9 @@ interface EditableBlockInterface {
         }
         constructordata: {
             prevHash: string
-            parentUid: string
-            file: FileInterface
+            medicalRecord: MedicalRecord
             pk: string
             nextPk: string
-            version: string
         }
         nonce: number
     }
@@ -30,15 +28,30 @@ interface BlockInterface extends EditableBlockInterface {
 }
 
 type SearchableParameters = 
-    "uid" | "timestamp" | "prevHash" | "file" | "pk" | "nextPk" | 
-    "nonce" | "signature" | "hash" | "parentUid" | "version"
+    "uid" | "timestamp" | "prevHash" | "med.patient.id" | "med.patient.name" | 
+    "med.patient.age" | "med.doctor.name" | "med.hospital.name" | "med.hospital.id" | 
+    "pk" | "nextPk" | "nonce" | "signature" | "hash" | "accessTo"
 
-interface FileInterface {
-    name: string
-    size: number // kilobytes
-    hash: string
-    description: string
-    userSignedHash: string
+interface MedicalRecord {
+    patient: {
+        id: string,
+        name: string,
+        age: number,
+    }
+    doctor: {
+        name: string,
+    }
+    hospital: {
+        name: string,
+        id: string,
+    }
+    record: {
+        name: string,
+        size: number,
+        hash: string,
+    }
+    medicalDetails: string
+
 }
 
 interface Keypair {

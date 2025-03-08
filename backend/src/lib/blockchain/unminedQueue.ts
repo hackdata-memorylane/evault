@@ -13,24 +13,6 @@ export class UnminedQueue {
     }
     
     addToQueue(block: BlockInterface, userPublicKey?: string): AddToUnmiedQueueError {
-        if (block.data.constructordata.parentUid) {
-            const parentBlock = 
-                chain.search("uid", block.data.constructordata.parentUid)[0] || 
-                this.search("uid", block.data.constructordata.parentUid)[0];
-
-            if (!parentBlock) 
-                return "parentBlockNotFound";
-            
-            if (
-                !userPublicKey ||
-                !KeyManager.verifySignature(
-                    block.data.constructordata.file.userSignedHash,
-                    userPublicKey,
-                    parentBlock.data.constructordata.file.hash
-                )
-            ) return "unauthorizedParentBlock";
-        }
-
         // if the queue is empty, set the previous hash to the last block in the chain
         if (this.queue.length === 0) {
             block.data.constructordata.prevHash = chain.getLastBlock()?.hash || "";

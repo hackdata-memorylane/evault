@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { getEl, Machine } from "json-db-jdb";
+import { Machine } from "json-db-jdb";
 import dotenv from "dotenv";
 import { connectDb, environ, upload } from "./lib/utils.js";
 import express from "express";
@@ -53,7 +53,6 @@ function fillUnminedQueue() {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(getEl("keys", "keypairs"));
         yield connectDb();
         fillChain();
         fillUnminedQueue();

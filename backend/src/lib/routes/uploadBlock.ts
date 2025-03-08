@@ -10,7 +10,7 @@ import unminedQueueModel from "../../schema/unminedQueueModel.js";
 
 export default async function uploadBlock(req: Request, res: Response) {
     try {
-        const { details, parentRecordId, version, userId } = req.body;
+        const medRecord = req.body as MedicalRecord;
         const file = req.file;
 
         if (!file) {
@@ -18,22 +18,20 @@ export default async function uploadBlock(req: Request, res: Response) {
             return;
         }
 
-        const user = await userModel.findOne({ uid: userId });
-        if (!user) {
-            res.status(400).json({ err: "User not found" });
+        const patient = await userModel.findOne({ uid: medRecord.patient.id });
+        if (!patient) {
+            res.status(400).json({ err: "Patient not found" });
             return;
         }
 
         const fileHash = sha256(file.filename);
-        const signer = createSign("rsa-sha256");
-        signer.update(fileHash);
         
-        const fileDetails: FileInterface = {
-            name: file.filename,
-            size: file.size,
-            description: details,
-            hash: sha256(file.filename),
-            userSignedHash: signer.sign(user.keypair!.privateKey!, "hex"),
+        const medRecordHashed: MedicalRecord = {
+            ...medRecord,
+            record: {
+                ...medRecord.record,
+                hash: fileHash,
+            },
         };
 
         const blockPartial: EditableBlockInterface = {
@@ -44,11 +42,9 @@ export default async function uploadBlock(req: Request, res: Response) {
                 },
                 constructordata: {
                     prevHash: "",
-                    parentUid: parentRecordId,
-                    file: fileDetails,
+                    medicalRecord: medRecordHashed,
                     pk: "",
                     nextPk: "",
-                    version: version,
                 },
                 nonce: 0,
             },
