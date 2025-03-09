@@ -22,6 +22,7 @@ import chain from "./lib/blockchain/chain.js";
 import mineBlock from "./lib/routes/mineBlock.js";
 import unminedQueueModel from "./schema/unminedQueueModel.js";
 import unminedQueue from "./lib/blockchain/unminedQueue.js";
+import loginAdmin from "./lib/routes/loginAdmin.js";
 dotenv.config();
 Machine.config = JSON.parse(environ.ENCDENC_SALT);
 const app = express();
@@ -64,6 +65,7 @@ app.post("/login", (req, res) => login(req, res));
 app.post("/autologin", (req, res) => autologin(req, res));
 app.post("/uploadBlock", upload.single("file"), uploadBlock);
 app.post("/mineBlock", (req, res) => mineBlock(req, res));
+app.post("/loginAdmin", (req, res) => loginAdmin(req, res));
 app.listen(3000, () => {
     console.log("Server started on port 3000");
 });
