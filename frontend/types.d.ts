@@ -26,3 +26,11 @@ export interface EntryResponseAdmin {
         }[]
     }
 }
+
+export interface DocLeafProps {
+    doctorName: string;
+    hospitalName: string;
+    hospitalId: string;
+    timestamp: number;
+    details: string;
+}

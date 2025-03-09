@@ -61,7 +61,6 @@ function App() {
                 if (path === "/" || path.startsWith("/entry")) {
                     return;
                 }
-
                 setUser(data.success);
             }).catch(() => {
                 //console.log("Error");
